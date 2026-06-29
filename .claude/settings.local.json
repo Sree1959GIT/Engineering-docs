@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m venv --help)",
+      "Bash(python -m venv venv --upgrade-deps)",
+      "Bash(venv/Scripts/pip install *)",
+      "Bash(awk '{print $NF, \"\\(\" $5 \" bytes\\)\"}')",
+      "Bash(venv/Scripts/pip list *)",
+      "Bash(venv/Scripts/python -m py_compile orchestrator.py auth.py)",
+      "Bash(venv/Scripts/python auth.py --status)",
+      "Bash(venv/Scripts/python -m py_compile auth.py)",
+      "Bash(venv/Scripts/python auth.py --help)",
+      "Bash(claude --version)",
+      "Bash(where claude *)",
+      "Bash(claude -p \"Say hello in one word\" --model claude-haiku-4-5-20251001)",
+      "Bash(venv/Scripts/python -c ' *)",
+      "Bash(claude -p \"Reply with exactly: OK\" --model claude-haiku-4-5-20251001 --output-format text)",
+      "Bash(claude -p \"List 3 IEC 60617 relay symbols\" --model claude-haiku-4-5-20251001 --output-format text)",
+      "Bash(dir \"C:\\\\Fixtures\\\\engineering-docs\")",
+      "Bash(python -c ' *)",
+      "Bash(gh auth *)",
+      "Bash(git init *)",
+      "Bash(git config *)",
+      "Bash(git add *)"
+    ]
+  }
+}

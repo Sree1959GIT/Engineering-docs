@@ -1,0 +1,161 @@
+"""
+schematic_lib.py - SVG Schematic Primitives Library
+
+Provides SVG drawing functions for electrical schematics:
+- Terminals, wires, relays, contacts
+- Motors, instruments, connectors
+- Proper IEC 60617 symbols
+
+Usage: 
+    from schematic_lib import svg, terminal, wire, relay_coil
+    
+    output = svg(400, 300)
+    output += terminal(50, 50, "IN", "A1")
+    output += wire([(50, 50), (100, 50)])
+    output += relay_coil(100, 50, "K1", "220V")
+    
+    with open("schematic.svg", "w") as f:
+        f.write(output)
+"""
+
+def mm(value):
+    """Convert mm to SVG units (1mm ≈ 3.78 units)"""
+    return value * 3.78
+
+def svg(width, height, title="Schematic"):
+    """Create SVG container"""
+    return f'''<svg width="{width}mm" height="{height}mm" viewBox="0 0 {width*mm(1)} {height*mm(1)}" 
+    xmlns="http://www.w3.org/2000/svg">
+    <title>{title}</title>
+    <defs>
+        <style>
+            .line {{ stroke: black; stroke-width: 1; fill: none; }}
+            .thick {{ stroke-width: 2; }}
+            .text {{ font-family: Arial; font-size: 12px; }}
+            .label {{ font-size: 10px; }}
+        </style>
+    </defs>
+'''
+
+def svg_close():
+    """Close SVG"""
+    return "</svg>"
+
+def terminal(x, y, label, ref="", direction="right"):
+    """Draw terminal block"""
+    size = mm(5)
+    return f'''
+    <!-- Terminal {ref} -->
+    <rect x="{mm(x)}" y="{mm(y)}" width="{size}" height="{size}" class="line thick" fill="white"/>
+    <circle cx="{mm(x+2.5)}" cy="{mm(y+2.5)}" r="{mm(1)}" fill="black"/>
+    <text x="{mm(x+3)}" y="{mm(y+8)}" class="label">{label}</text>
+    <text x="{mm(x+3)}" y="{mm(y+12)}" class="label">{ref}</text>
+    '''
+
+def wire(points, thick=False):
+    """Draw wire (polyline)"""
+    coords = " ".join([f"{mm(p[0])},{mm(p[1])}" for p in points])
+    style = "thick" if thick else ""
+    return f'''<!-- Wire -->
+    <polyline points="{coords}" class="line {style}"/>
+    '''
+
+def relay_coil(x, y, label, voltage, poles=1):
+    """Draw relay coil"""
+    return f'''
+    <!-- Relay Coil {label} -->
+    <rect x="{mm(x)}" y="{mm(y)}" width="{mm(8)}" height="{mm(6)}" class="line" fill="lightblue" stroke-width="2"/>
+    <text x="{mm(x+1)}" y="{mm(y+4)}" class="text">{label}</text>
+    <text x="{mm(x+1)}" y="{mm(y+8)}" class="label">{voltage}</text>
+    '''
+
+def contact(x, y, type_no="NO", ref=""):
+    """Draw contact (N.O. or N.C.)"""
+    if type_no == "NO":
+        # N.O. contact (normally open)
+        return f'''
+        <!-- N.O. Contact {ref} -->
+        <circle cx="{mm(x)}" cy="{mm(y)}" r="{mm(1.5)}" class="line" fill="white"/>
+        <circle cx="{mm(x+3)}" cy="{mm(y)}" r="{mm(1.5)}" class="line" fill="white"/>
+        <line x1="{mm(x+1.5)}" y1="{mm(y-1)}" x2="{mm(x+1.5)}" y2="{mm(y+1)}" class="line"/>
+        '''
+    else:
+        # N.C. contact (normally closed)
+        return f'''
+        <!-- N.C. Contact {ref} -->
+        <circle cx="{mm(x)}" cy="{mm(y)}" r="{mm(1.5)}" class="line" fill="white"/>
+        <circle cx="{mm(x+3)}" cy="{mm(y)}" r="{mm(1.5)}" class="line" fill="white"/>
+        <line x1="{mm(x)}" y1="{mm(y)}" x2="{mm(x+3)}" y2="{mm(y)}" class="line"/>
+        '''
+
+def motor(x, y, label="M", kw=0):
+    """Draw motor symbol"""
+    radius = mm(4)
+    return f'''
+    <!-- Motor {label} -->
+    <circle cx="{mm(x)}" cy="{mm(y)}" r="{radius}" class="line thick" fill="lightyellow"/>
+    <text x="{mm(x-2)}" y="{mm(y+2)}" class="text" font-weight="bold">{label}</text>
+    <text x="{mm(x-3)}" y="{mm(y+10)}" class="label">{kw}kW</text>
+    '''
+
+def wattmeter(x, y, label="W"):
+    """Draw wattmeter symbol"""
+    radius = mm(3)
+    return f'''
+    <!-- Wattmeter {label} -->
+    <circle cx="{mm(x)}" cy="{mm(y)}" r="{radius}" class="line" fill="lightcyan"/>
+    <text x="{mm(x-1.5)}" y="{mm(y+1.5)}" class="text">{label}</text>
+    '''
+
+def source(x, y, type_ac="AC", voltage="380V", phases=3):
+    """Draw AC/DC source"""
+    return f'''
+    <!-- Source {type_ac} {voltage} -->
+    <circle cx="{mm(x)}" cy="{mm(y)}" r="{mm(3)}" class="line" fill="lightgreen"/>
+    <text x="{mm(x-2)}" y="{mm(y+1)}" class="text">{type_ac}</text>
+    <text x="{mm(x-4)}" y="{mm(y+8)}" class="label">{voltage}</text>
+    <text x="{mm(x-4)}" y="{mm(y+12)}" class="label">{phases}ph</text>
+    '''
+
+def text_label(x, y, text, size=10):
+    """Add text label"""
+    return f'<text x="{mm(x)}" y="{mm(y)}" class="text" font-size="{size}">{text}</text>'
+
+def html_page(svg_content, title="Engineering Schematic"):
+    """Wrap SVG in HTML page"""
+    return f'''<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{title}</title>
+    <style>
+        body {{ font-family: Arial; margin: 20px; }}
+        svg {{ border: 1px solid #ccc; display: block; margin: 20px 0; }}
+        h1 {{ color: #333; }}
+    </style>
+</head>
+<body>
+    <h1>{title}</h1>
+    <div>
+        {svg_content}
+    </div>
+    <p><small>Generated by Engineering Documentation Orchestrator</small></p>
+</body>
+</html>
+'''
+
+# Example usage
+if __name__ == "__main__":
+    # Create a simple schematic
+    output = svg(200, 150)
+    output += terminal(10, 10, "AC IN", "A1")
+    output += wire([(15, 15), (40, 15)])
+    output += relay_coil(40, 10, "K1", "220V")
+    output += motor(80, 20, "M", 2.2)
+    output += svg_close()
+    
+    # Save to file
+    with open("example_schematic.svg", "w") as f:
+        f.write(output)
+    
+    print("✓ Example schematic created: example_schematic.svg")

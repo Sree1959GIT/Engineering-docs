@@ -1,0 +1,275 @@
+═══════════════════════════════════════════════════════════════════════════════
+QUICK SETUP — COPY & PASTE THESE COMMANDS IN ORDER
+═══════════════════════════════════════════════════════════════════════════════
+
+This file contains all the terminal commands you need, in the right order.
+Just copy and paste each section into your terminal.
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 1: CREATE FOLDER STRUCTURE
+═══════════════════════════════════════════════════════════════════════════════
+
+Copy and paste this entire block:
+
+────────────────────────────────────────────────────────────────────────────────
+mkdir -p ~/engineering-docs
+mkdir -p ~/engineering-docs/docs
+mkdir -p ~/engineering-docs/scripts
+mkdir -p ~/engineering-docs/outputs
+cd ~/engineering-docs
+echo "✓ Folders created"
+────────────────────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 2: COPY ALL FILES TO YOUR PROJECT FOLDER
+═══════════════════════════════════════════════════════════════════════════════
+
+**Assuming you downloaded files to ~/Downloads/**
+
+Copy and paste this entire block:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+
+# Copy main files (4 files)
+cp ~/Downloads/START_HERE.md .
+cp ~/Downloads/engineering-docs-orchestrator.py orchestrator.py
+cp ~/Downloads/.env.example .
+cp ~/Downloads/wiring-block-diagrams.skill .
+
+# Copy documentation files to docs/ (9 files)
+cp ~/Downloads/README.md docs/
+cp ~/Downloads/MASTER.md docs/
+cp ~/Downloads/WORKFLOW.md docs/
+cp ~/Downloads/MCP-SETUP.md docs/
+cp ~/Downloads/MCP_QUICK_REFERENCE.md docs/
+cp ~/Downloads/FILES_CHECKLIST.md docs/
+cp ~/Downloads/DELIVERY_SUMMARY.txt docs/
+cp ~/Downloads/FINAL_SUMMARY.txt docs/
+cp ~/Downloads/FOLDER_STRUCTURE.md docs/
+
+echo "✓ All files copied"
+────────────────────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 3: VERIFY FILES ARE IN PLACE
+═══════════════════════════════════════════════════════════════════════════════
+
+Copy and paste:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+echo "=== Main folder files ==="
+ls -la | grep -E "orchestrator|wiring-block|.env|START_HERE"
+echo ""
+echo "=== Docs folder files ==="
+ls -la docs/ | head -12
+────────────────────────────────────────────────────────────────────────────────
+
+You should see:
+  ✓ orchestrator.py
+  ✓ wiring-block-diagrams.skill
+  ✓ .env.example
+  ✓ START_HERE.md
+  ✓ docs/ with 9 files inside
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 4: CREATE .env FILE WITH YOUR API KEY
+═══════════════════════════════════════════════════════════════════════════════
+
+First, get your API key from: https://console.anthropic.com/api-keys
+
+Then, copy and paste:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+cp .env.example .env
+────────────────────────────────────────────────────────────────────────────────
+
+Now EDIT the .env file:
+
+────────────────────────────────────────────────────────────────────────────────
+nano .env
+────────────────────────────────────────────────────────────────────────────────
+
+You'll see:
+  ANTHROPIC_API_KEY=sk-ant-...
+
+Replace "sk-ant-..." with your ACTUAL API key (copy from https://console.anthropic.com/api-keys)
+
+To save in nano:
+  1. Press Ctrl+O
+  2. Press Enter
+  3. Press Ctrl+X
+
+Done! ✓
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 5: INSTALL PYTHON DEPENDENCIES
+═══════════════════════════════════════════════════════════════════════════════
+
+Copy and paste:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+pip install anthropic python-dotenv
+────────────────────────────────────────────────────────────────────────────────
+
+Wait for it to finish. You should see:
+  Successfully installed anthropic python-dotenv
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 6: VERIFY SETUP WITH A TEST
+═══════════════════════════════════════════════════════════════════════════════
+
+Copy and paste:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+python orchestrator.py
+────────────────────────────────────────────────────────────────────────────────
+
+You should see:
+
+  ================================================================================
+  ENGINEERING DOCUMENTATION ORCHESTRATOR (Haiku → Opus → Drive)
+  ================================================================================
+  
+  [Step 1] Describe your engineering task:
+  (Paste sketch description, CSV path, or wiring requirements)
+  ---
+
+This means SETUP IS WORKING! ✓
+
+Type "done" to exit for now.
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 7: OPEN CLAUDE CODE IN YOUR PROJECT FOLDER
+═══════════════════════════════════════════════════════════════════════════════
+
+Copy and paste:
+
+────────────────────────────────────────────────────────────────────────────────
+cd ~/engineering-docs
+claude code
+────────────────────────────────────────────────────────────────────────────────
+
+Claude Code should open with your engineering-docs folder as the working directory.
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 8: ENABLE GOOGLE DRIVE MCP IN CLAUDE CODE
+═══════════════════════════════════════════════════════════════════════════════
+
+In Claude Code (not terminal):
+
+1. Click "Customize" (left sidebar or account menu)
+2. Click "Connectors"
+3. Find "Google Drive"
+4. Click "Connect"
+5. A browser window opens → Sign in with your Google account
+6. Click "Allow" to give Claude Code permission
+7. Back in Claude Code → You should see "Connected" next to Google Drive
+
+✓ Google Drive MCP is now active!
+
+═══════════════════════════════════════════════════════════════════════════════
+STEP 9: YOU'RE READY!
+═══════════════════════════════════════════════════════════════════════════════
+
+In Claude Code terminal, run:
+
+────────────────────────────────────────────────────────────────────────────────
+python orchestrator.py
+────────────────────────────────────────────────────────────────────────────────
+
+Then paste your first engineering task when prompted.
+
+Example:
+  AC 3-phase motor control via 5A relay K1 (220V coil).
+  RTD sensors T1, T2, T3 on CU1 to DMM.
+  Wattmeter on motor phases.
+  done
+
+Wait 3-4 minutes, then check your Google Drive for the output folder!
+
+═══════════════════════════════════════════════════════════════════════════════
+TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+Problem: "Command not found: claude code"
+Solution: Install Claude Code first
+  → See: https://docs.claude.com/en/docs/claude-code/overview
+
+Problem: "ModuleNotFoundError: No module named 'anthropic'"
+Solution: Install dependencies again
+  $ cd ~/engineering-docs && pip install anthropic python-dotenv
+
+Problem: "ANTHROPIC_API_KEY not found"
+Solution: Check your .env file
+  $ cd ~/engineering-docs && cat .env | grep ANTHROPIC_API_KEY
+  Should show: ANTHROPIC_API_KEY=sk-ant-...
+  If blank, edit: nano .env
+
+Problem: "Google Drive MCP not connected"
+Solution: In Claude Code, go to Customize → Connectors
+  Is Google Drive showing "Connected"? If not, click "Connect" and re-authorize.
+
+═══════════════════════════════════════════════════════════════════════════════
+FOLDER STRUCTURE AFTER SETUP
+═══════════════════════════════════════════════════════════════════════════════
+
+After all steps, your folder should look like:
+
+~/engineering-docs/
+├── orchestrator.py
+├── wiring-block-diagrams.skill
+├── .env
+├── START_HERE.md
+├── docs/
+│   ├── README.md
+│   ├── MASTER.md
+│   ├── WORKFLOW.md
+│   ├── MCP-SETUP.md
+│   ├── MCP_QUICK_REFERENCE.md
+│   ├── FILES_CHECKLIST.md
+│   ├── FOLDER_STRUCTURE.md
+│   ├── DELIVERY_SUMMARY.txt
+│   └── FINAL_SUMMARY.txt
+├── scripts/ (auto-created)
+└── outputs/ (auto-created)
+
+═══════════════════════════════════════════════════════════════════════════════
+QUICK COMMAND REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+# Always navigate to your project folder first
+cd ~/engineering-docs
+
+# Check files are there
+ls -la
+
+# Edit .env with API key
+nano .env
+
+# Install dependencies
+pip install anthropic python-dotenv
+
+# Test the script
+python orchestrator.py
+
+# Open Claude Code in this folder
+claude code
+
+═══════════════════════════════════════════════════════════════════════════════
+YOU'RE ALL SET!
+═══════════════════════════════════════════════════════════════════════════════
+
+Next: Run your first engineering documentation task!
+
+  cd ~/engineering-docs
+  python orchestrator.py
+  [paste your task description]
+
+Questions? Read START_HERE.md in your project folder.
+
+Good luck! 🚀

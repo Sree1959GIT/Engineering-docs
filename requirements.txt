@@ -1,0 +1,32 @@
+# Engineering Documentation Orchestrator — Dependencies
+# Install all: pip install -r requirements.txt
+
+# ── Core Claude API ────────────────────────────────────────────────────────────
+anthropic>=0.40.0
+
+# ── File parsing ───────────────────────────────────────────────────────────────
+openpyxl>=3.1.0           # Excel (.xlsx, .xlsm)
+pdfplumber>=0.11.0         # PDF text extraction (preferred)
+PyPDF2>=3.0.0              # PDF text extraction (fallback)
+
+# ── Diagram generation ─────────────────────────────────────────────────────────
+schemdraw>=0.19.0          # IEC 60617 electrical schematics → SVG
+matplotlib>=3.8.0          # Block / system diagrams → PNG
+numpy>=1.26.0              # Required by matplotlib
+
+# ── SVG → PNG conversion (needed to embed SVG schematics in PDF/docx) ──────────
+cairosvg>=2.7.0            # Best option — requires cairo system library
+# svglib>=1.5.0            # Pure-Python fallback (uncomment if cairosvg fails on Windows)
+
+# ── Document output ────────────────────────────────────────────────────────────
+reportlab>=4.1.0           # PDF generation (pure Python, Windows-friendly)
+python-docx>=1.1.0         # Word document (.docx) generation
+
+# ── Environment ────────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0       # Load .env config values
+
+# ── Windows note ───────────────────────────────────────────────────────────────
+# cairosvg on Windows requires GTK+ runtime for the cairo DLL.
+# If installation fails, comment out cairosvg and uncomment svglib instead.
+# SVG diagrams (schemdraw) will still render correctly — only PDF/docx
+# embedding of SVGs is affected. PNG diagrams (matplotlib) always embed fine.

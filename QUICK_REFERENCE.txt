@@ -1,0 +1,157 @@
+================================================================================
+                    ENGINEERING DOCS — QUICK REFERENCE
+                         Local venv + OAuth Setup
+================================================================================
+
+📁 PROJECT LOCATION
+   C:\Fixtures\engineering-docs\
+
+🐍 ACTIVATE VIRTUAL ENVIRONMENT
+   Windows (CMD):      venv\Scripts\activate
+   Windows (PS):       .\venv\Scripts\Activate.ps1
+   macOS/Linux:        source venv/bin/activate
+
+   You'll see:         (venv) C:\Fixtures\engineering-docs>
+
+🔑 AUTHENTICATION (OAuth Recommended)
+
+   First Run (OAuth via Claude Subscription):
+   ┌─────────────────────────────────────────┐
+   │ python orchestrator.py                  │
+   │                                         │
+   │ Choose Option 1: OAuth (recommended)    │
+   │ → Browser opens automatically           │
+   │ → Sign in with Claude subscription      │
+   │ → Navigate to API Keys                  │
+   │ → Copy & paste API key                  │
+   │ → Credentials saved to:                 │
+   │ ~/.claude-engineering/credentials.json  │
+   └─────────────────────────────────────────┘
+
+   Credential Management:
+   python auth.py --setup        → Choose OAuth or API Key
+   python auth.py --status       → Check status
+   python auth.py --revoke       → Clear credentials
+   python auth.py --help         → Show all options
+
+   Environment Variable (override):
+   export ANTHROPIC_API_KEY=sk-ant-...
+   python orchestrator.py
+
+📋 VERIFY SETUP
+   pip list                      → Show installed packages
+   python auth.py --status       → Check auth status
+   python -m py_compile *.py     → Check syntax
+
+🚀 RUN WORKFLOW
+   python orchestrator.py
+
+   Then:
+   1. Paste engineering task description
+   2. Type "done" when finished
+   3. Enter project name
+   4. Review Haiku analysis
+   5. Confirm with Opus
+   6. Wait 3-4 minutes
+   7. Check outputs/ folder
+
+📂 PROJECT STRUCTURE
+   orchestrator.py               Main script (updated)
+   auth.py                       Credential manager (NEW)
+   requirements.txt              Dependencies (NEW)
+   .env                          Config file
+   .gitignore                    Protect credentials (NEW)
+   venv/                         Local environment (NEW)
+   outputs/                      Generated files (NEW)
+   scripts/                      Python modules
+   docs/                         Documentation
+
+📚 DOCUMENTATION
+   MIGRATION_SUMMARY.md          What changed
+   SETUP_COMPLETE.md             Full setup guide
+   VERIFICATION_CHECKLIST_v2.md  Step-by-step verification
+   START_HERE.md                 Quick start
+   README.md                     Project overview
+
+🛠️ COMMON TASKS
+
+   Install/Update Dependencies:
+   pip install -r requirements.txt --upgrade
+
+   Check What's Installed:
+   pip list
+
+   Test Python Syntax:
+   python -m py_compile orchestrator.py auth.py
+
+   Get Auth Status:
+   python auth.py --status
+
+   Clear Credentials (security):
+   python auth.py --revoke
+
+   Set Env Variable (override local creds):
+   export ANTHROPIC_API_KEY=sk-ant-...
+
+⚠️ TROUBLESHOOTING
+
+   Problem: "(venv) not showing"
+   Fix: Run: venv\Scripts\activate
+
+   Problem: "No module named 'anthropic'"
+   Fix: pip install -r requirements.txt
+
+   Problem: "No API key found"
+   Fix: python auth.py --setup
+        OR: paste key when prompted on first run
+
+   Problem: "Invalid API key format"
+   Fix: Key must start with "sk-ant-"
+        Get real key: console.anthropic.com/api-keys
+
+   Problem: "scripts folder not found"
+   Fix: Verify files in: scripts/
+        Run: dir scripts\
+
+🔒 SECURITY NOTES
+   ✓ API keys NOT in git (git-ignored)
+   ✓ Credentials stored locally only
+   ✓ File permissions: owner-read-write only
+   ✓ No hardcoded keys in source code
+   ✓ Environment variable for CI/CD
+
+📍 KEY FILES CREATED
+   auth.py                      OAuth-style credential manager
+   requirements.txt             Python dependencies
+   .gitignore                   Git ignore rules
+   outputs/                     Output folder
+
+   Updated:
+   orchestrator.py              Now uses auth.py
+   .env                         No hardcoded API key
+   .env.example                 Documents new auth
+
+🌐 USEFUL LINKS
+   Anthropic Console:     https://console.anthropic.com/api-keys
+   Anthropic Docs:        https://docs.anthropic.com
+   This Project:          C:\Fixtures\engineering-docs\
+
+✅ QUICK SETUP (First Time)
+   1. cd C:\Fixtures\engineering-docs
+   2. venv\Scripts\activate
+   3. python orchestrator.py
+   4. Follow setup prompts (asks for API key)
+   5. Paste your engineering task
+   6. Wait for results
+
+✅ QUICK RUN (Subsequent Times)
+   1. cd C:\Fixtures\engineering-docs
+   2. venv\Scripts\activate
+   3. python orchestrator.py
+   4. Paste your engineering task
+   5. Done! Results in outputs/
+
+================================================================================
+                        For more details, see:
+              SETUP_COMPLETE.md or VERIFICATION_CHECKLIST_v2.md
+================================================================================

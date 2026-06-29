@@ -1,0 +1,318 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                     WINDOWS QUICK START GUIDE                             ║
+║           Engineering Documentation Orchestrator Setup                     ║
+║                For: C:\Fixtures\engineering-docs\                         ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+═══════════════════════════════════════════════════════════════════════════════
+
+OVERVIEW
+
+You're setting up an automated engineering documentation system that:
+  ✓ Uses Haiku 4.5 to analyze tasks (fast & cheap)
+  ✓ Uses Opus 4.8 to create professional diagrams (high quality)
+  ✓ Saves everything to Google Drive automatically
+
+Total cost per diagram: ~$0.15
+Total time per diagram: ~4 minutes
+Savings vs. Opus-only: 70%
+
+═══════════════════════════════════════════════════════════════════════════════
+
+YOUR FOLDER LOCATION
+
+Main Folder: C:\Fixtures\engineering-docs\
+
+This is where all your files and scripts will go.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DOWNLOAD THESE 15 FILES
+
+All files are in: /mnt/user-data/outputs/
+
+Use your Claude interface to download all files to your Downloads folder:
+  C:\Users\YourName\Downloads\
+
+Files to download:
+  1. orchestrator.py
+  2. wiring-block-diagrams.skill
+  3. .env.example
+  4. START_HERE.md
+  5. README.md
+  6. MASTER.md
+  7. WORKFLOW.md
+  8. MCP-SETUP.md
+  9. MCP_QUICK_REFERENCE.md
+ 10. FILES_CHECKLIST.md
+ 11. FOLDER_STRUCTURE.md
+ 12. DELIVERY_SUMMARY.txt
+ 13. FINAL_SUMMARY.txt
+ 14. QUICK_SETUP_COMMANDS.txt
+ 15. install.bat ← IMPORTANT! Download this installer script
+
+═══════════════════════════════════════════════════════════════════════════════
+
+AUTOMATED SETUP (EASIEST)
+
+1. Copy install.bat to C:\Fixtures\engineering-docs\
+
+2. Open Command Prompt:
+   - Press Windows+R
+   - Type: cmd
+   - Press Enter
+
+3. Run:
+   cd C:\Fixtures\engineering-docs
+   install.bat
+
+   This will:
+   ✓ Create folders (docs, scripts, outputs)
+   ✓ Copy all files to correct locations
+   ✓ Create .env file
+   ✓ Install Python dependencies
+   ✓ Show you next steps
+
+4. Follow the on-screen instructions
+
+═══════════════════════════════════════════════════════════════════════════════
+
+MANUAL SETUP (If installer doesn't work)
+
+STEP 1: Create Folders
+────────────────────────────────────────────────────────────────────────────
+
+Open Command Prompt:
+  cd C:\Fixtures\engineering-docs
+  mkdir docs
+  mkdir scripts
+  mkdir outputs
+
+Or use File Explorer:
+  Right-click in C:\Fixtures\engineering-docs\ → New → Folder
+  Create 3 folders: docs, scripts, outputs
+
+STEP 2: Copy Files
+────────────────────────────────────────────────────────────────────────────
+
+Copy 11 files to main folder (C:\Fixtures\engineering-docs\):
+  ✓ orchestrator.py
+  ✓ wiring-block-diagrams.skill
+  ✓ .env.example
+  ✓ START_HERE.md
+  ✓ README.md
+  ✓ MASTER.md
+  ✓ WORKFLOW.md
+  ✓ MCP-SETUP.md
+  ✓ MCP_QUICK_REFERENCE.md
+  ✓ FILES_CHECKLIST.md
+  ✓ FOLDER_STRUCTURE.md
+
+Copy 4 files to docs\ subfolder (C:\Fixtures\engineering-docs\docs\):
+  ✓ DELIVERY_SUMMARY.txt
+  ✓ FINAL_SUMMARY.txt
+  ✓ QUICK_SETUP_COMMANDS.txt
+  ✓ WINDOWS_SETUP_GUIDE.md
+
+Using Command Prompt (faster):
+  cd C:\Fixtures\engineering-docs
+  copy C:\Users\YourName\Downloads\orchestrator.py .
+  copy C:\Users\YourName\Downloads\wiring-block-diagrams.skill .
+  copy C:\Users\YourName\Downloads\.env.example .
+  copy C:\Users\YourName\Downloads\START_HERE.md .
+  copy C:\Users\YourName\Downloads\README.md .
+  copy C:\Users\YourName\Downloads\MASTER.md .
+  copy C:\Users\YourName\Downloads\WORKFLOW.md .
+  copy C:\Users\YourName\Downloads\MCP-SETUP.md .
+  copy C:\Users\YourName\Downloads\MCP_QUICK_REFERENCE.md .
+  copy C:\Users\YourName\Downloads\FILES_CHECKLIST.md .
+  copy C:\Users\YourName\Downloads\FOLDER_STRUCTURE.md .
+  copy C:\Users\YourName\Downloads\DELIVERY_SUMMARY.txt docs\
+  copy C:\Users\YourName\Downloads\FINAL_SUMMARY.txt docs\
+  copy C:\Users\YourName\Downloads\QUICK_SETUP_COMMANDS.txt docs\
+
+STEP 3: Create .env File
+────────────────────────────────────────────────────────────────────────────
+
+In Command Prompt:
+  cd C:\Fixtures\engineering-docs
+  copy .env.example .env
+
+STEP 4: Add Your API Key
+────────────────────────────────────────────────────────────────────────────
+
+Get API key from: https://console.anthropic.com/api-keys
+
+Edit .env:
+  notepad .env
+
+Replace this:
+  ANTHROPIC_API_KEY=sk-ant-...
+
+With your actual key (copy from API keys page)
+
+Save: Ctrl+S
+
+STEP 5: Install Python Dependencies
+────────────────────────────────────────────────────────────────────────────
+
+In Command Prompt:
+  cd C:\Fixtures\engineering-docs
+  pip install anthropic python-dotenv
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FINAL SETUP STEPS (After Files Are Organized)
+
+1. ENABLE GOOGLE DRIVE MCP
+   - Open Claude Code
+   - Click Customize → Connectors
+   - Find Google Drive → Click Connect
+   - Sign in with your Google account
+   - Should show "Connected" ✓
+
+2. TEST YOUR SETUP
+   Open Command Prompt:
+     cd C:\Fixtures\engineering-docs
+     python orchestrator.py
+   
+   Should show:
+     ================================================================================
+     ENGINEERING DOCUMENTATION ORCHESTRATOR (Haiku → Opus → Drive)
+     ================================================================================
+     
+     [Step 1] Describe your engineering task:
+
+   Type "done" and press Enter to exit
+
+3. OPEN CLAUDE CODE IN YOUR PROJECT FOLDER
+   In Command Prompt:
+     cd C:\Fixtures\engineering-docs
+     claude code
+
+═══════════════════════════════════════════════════════════════════════════════
+
+YOUR FINAL FOLDER STRUCTURE
+
+After all files are copied, you should have:
+
+C:\Fixtures\engineering-docs\
+├── orchestrator.py
+├── wiring-block-diagrams.skill
+├── .env                           ← Created from .env.example
+├── .env.example
+├── START_HERE.md
+├── README.md
+├── MASTER.md
+├── WORKFLOW.md
+├── MCP-SETUP.md
+├── MCP_QUICK_REFERENCE.md
+├── FILES_CHECKLIST.md
+├── FOLDER_STRUCTURE.md
+│
+├── docs\
+│   ├── DELIVERY_SUMMARY.txt
+│   ├── FINAL_SUMMARY.txt
+│   ├── QUICK_SETUP_COMMANDS.txt
+│   └── WINDOWS_SETUP_GUIDE.md
+│
+├── scripts\
+│   (empty — will be auto-created)
+│
+└── outputs\
+    (empty — will be auto-created)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RUN YOUR FIRST TASK
+
+In Command Prompt:
+  cd C:\Fixtures\engineering-docs
+  python orchestrator.py
+
+When prompted, paste your engineering task. Example:
+
+  AC 3-phase motor control via 5A relay K1.
+  RTD sensors T1, T2, T3 on CU1 to DMM.
+  Wattmeter on motor phases.
+  done
+
+Then:
+  Project name: TestRig-MotorControl
+
+Wait 3-4 minutes. Haiku will analyze, Opus will create, Google Drive will save.
+
+Check Google Drive for:
+  ✓ PDF schematic (professional diagram with IEC 60617 symbols)
+  ✓ Connection table (CSV)
+  ✓ Block descriptions (text)
+  ✓ [VERIFY] items (things to confirm with hardware team)
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING
+
+PROBLEM: "python: command not found"
+SOLUTION: Python not installed or not in PATH
+  1. Download Python from: https://www.python.org/downloads/
+  2. During installation, CHECK: "Add Python to PATH"
+  3. Restart Command Prompt
+  4. Try again
+
+PROBLEM: "ModuleNotFoundError: No module named 'anthropic'"
+SOLUTION: Dependencies not installed
+  cd C:\Fixtures\engineering-docs
+  pip install --upgrade anthropic python-dotenv
+
+PROBLEM: ".env file not created"
+SOLUTION: Create it manually
+  cd C:\Fixtures\engineering-docs
+  copy .env.example .env
+  notepad .env
+
+PROBLEM: "Google Drive MCP not showing Connected"
+SOLUTION: In Claude Code, click Customize → Connectors → Google Drive → Connect
+  Re-authorize with your Google account
+
+PROBLEM: install.bat won't run
+SOLUTION: Run Command Prompt as Administrator
+  1. Search for "Command Prompt"
+  2. Right-click → Run as Administrator
+  3. Run: cd C:\Fixtures\engineering-docs
+  4. Run: install.bat
+
+═══════════════════════════════════════════════════════════════════════════════
+
+DOCUMENTATION
+
+For detailed help, read these files in your docs\ folder:
+
+- START_HERE.md ← Overview (read first!)
+- WINDOWS_SETUP_GUIDE.md ← Detailed Windows instructions
+- FOLDER_STRUCTURE.md ← Folder layout reference
+- README.md ← Complete guide
+- MASTER.md ← Full architecture details
+- MCP_QUICK_REFERENCE.md ← MCP cheat sheet
+
+═══════════════════════════════════════════════════════════════════════════════
+
+YOU'RE ALL SET!
+
+Next steps:
+  1. Download the 15 files from /mnt/user-data/outputs/
+  2. Run install.bat (automated) OR follow manual steps above
+  3. Edit .env with your API key
+  4. Run: python orchestrator.py
+  5. Watch your first diagram get created!
+
+Questions? Check docs\WINDOWS_SETUP_GUIDE.md for detailed help.
+
+═══════════════════════════════════════════════════════════════════════════════
+
+Good luck! 🚀
+
+Total setup time: ~10 minutes
+Time to first result: ~15 minutes total
+Cost per diagram: ~$0.15
+
+Let's build some beautiful engineering documentation!
