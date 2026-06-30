@@ -130,6 +130,64 @@ vessel, furnace, cooling tower, filter, funnel) line up closely with the symbol 
 described qualitatively in `conventions.md`'s **Symbols** section — treat that section as the
 house style and this document as the standards basis behind it.
 
+### ISO 14617 symbol catalog (worked reference, 103 symbols)
+
+A 6-page company-internal instruction sheet ("ISO 14617 SYMBOLS", Wärtsilä Technology Oy, drawing
+4V92A1174, 2002 edition) numbers and draws 103 ISO 14617 process symbols. Each entry cites its
+ISO 14617 part/clause and item number (e.g. `8-4.1.1.Sym 2101` = part 8, clause 4.1.1, item
+2101 = two-way valve). Useful as a recognition reference when a source drawing uses bare process
+symbols with no label. Grouped by category (pos. numbers from that sheet in brackets):
+
+- **Valves — two-way** [1–18]: plain two-way valve; manual/weight-loaded/float-operated/
+  solenoid/electric-motor/diaphragm/double-acting-cylinder actuated variants; spring-loaded
+  safety valve with automatic return; combined non-return + manually actuated stop valve;
+  self-operating pressure-reducing control valve. Actuator type is shown as a small symbol
+  stacked on the valve body (motor = circled M, diaphragm = curved cap, solenoid = coil box,
+  cylinder = rectangle, spring = zigzag).
+- **Valves — three-way** [17–25]: three-way valve with the same actuator-variant pattern
+  (solenoid, electric motor, diaphragm, double-acting cylinder), plus self-operating
+  pressure-reducing and self-operating thermostatic three-way control valves.
+- **Valves — angled** [26–30]: angle two-way valve, weight-loaded, spring-loaded safety,
+  non-return (plain and hand-operating) angled valves.
+- **Valves — restriction/release/shuttle** [31–35, 99, 102–103]: adjustable restrictor, orifice
+  plate, restrictor, self-operating release valve / steam trap / air vent, shuttle valve with
+  AND-function, overflow safety valve, and the open/close two-position vs. infinite-position
+  automatic valve-operator symbols (circle-on-stem next to the valve body, with OPEN/CLOSE
+  labels) — these last two are the standard way to show a valve's actuator has discrete vs.
+  continuous positioning.
+- **Valves — multi-port (2/3/4-way pneumatic/solenoid/lever/manual)** [36–50]: the
+  pneumatic-distribution-valve symbol family (`Valve_2_2_...`, `Valve_3_2_...`,
+  `Valve_4_2_...`) — a row of small boxes (port/flow-path positions) with an actuator symbol at
+  each end (pneumatic, solenoid, lever+spring, manual+spring). Common on hydraulic/pneumatic
+  circuit diagrams rather than P&IDs.
+- **Rotating machines** [51–58]: turbogenerator (circle + triangle), turbogenerator with gear
+  transmission, turbocharger, electric motor (circled M), compressor (circle with flat side),
+  liquid pump and hydraulic pump (circle with internal triangle/arrow), manual hydraulic pump.
+- **Heat transfer & vessels** [59–65, 92–95]: boiler feedwater vessel with deaerator, heating/
+  cooling coil, heat exchanger/condenser, pneumatic-air lubricator, air fin cooler with induced
+  draft (radiator), drain funnel, trough/drip tray with drain funnel, pipeline with/without
+  thermal insulation, pressure vessel with diaphragm (expansion vessel), pressure/vacuum vessel.
+- **Pipe fittings & joints** [66–79]: blind flange pair, flange coupling/pair, end cap, screwed
+  joint, pipe reducer (concentric and eccentric), quick-release coupling elements (female/male,
+  with/without automatic closing on decoupling), flexible pipe/bellows/hose, expansion sleeve,
+  expansion bellows.
+- **Vents, traps & silencers** [80–82, 96–97]: siphon/anti-siphon trap, air vent, air vent +
+  flame arrestor, silencer, viewing glass.
+- **Filters & separators** [83–91]: high-speed centrifuge (separator), centrifugal filter,
+  candle filter with rotating drum (plain and with by-pass), bag/candle/leaf/cartridge filter,
+  duplex filter, screen/sieve/strainer/filter, settling separator, cyclone separator — these
+  share a family resemblance (a box with an internal filter-element hatch pattern); the specific
+  hatch/internal-symbol distinguishes the filter type.
+- **Indicating instruments** [98, 100–101]: generic indicating/measuring instrument (circled X
+  with a letter key — P pressure, T temperature, V viscosity, F flow rate — cites **ISO 3511**
+  for the instrument letter codes, the predecessor scheme ANSI/ISA 5.1 superseded for most new
+  work), flow-rate indication (circled FI), flow-rate recording with volume summation (circled
+  FRQ + FT pair).
+
+Treat the descriptions above as a recognition aid, not a redraw template — when a source drawing
+uses one of these symbols, identify it from this list and describe its function in the blocks
+list per `assembly.md`, rather than copying the schematic glyph pixel-for-pixel.
+
 ## Quick lookup: which standard governs what
 
 | Question | Standard |
@@ -147,6 +205,10 @@ house style and this document as the standards basis behind it.
 - IEC 60617 symbol catalog extract (uploaded PDF, 53 pp.) — symbol descriptions across
   connections, switches, relays, protective devices, machines, transformers, instruments;
   page 52 cross-references ISO 14617 (Fan 2302, Pump 2301).
+- *ISO 14617 Symbols* (uploaded PDF, 6 pp.) — Wärtsilä Technology Oy internal instruction sheet,
+  drawing 4V92A1174, numbering and drawing 103 ISO 14617:2002-01 process symbols (valves,
+  rotating machines, heat transfer/vessels, pipe fittings, filters/separators, instruments) with
+  ISO part/clause/item citations per symbol.
 - Mark Ludwigson, *Piping and Instrumentation Diagrams* (SunCam online CE course, uploaded PDF,
   pp. 1–26 read) — P&ID overview, related diagram types (block flow, PFD, instrument schematic,
   wiring diagram, SCADA, logic diagrams), **Table 1: Summary of Standards for P&IDs** (ANSI/ISA
