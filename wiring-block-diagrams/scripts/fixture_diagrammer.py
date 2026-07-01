@@ -28,6 +28,16 @@ CLASS_COLORS = {
     "harness": ("#003366", "-"),   # physical multicore (use lw>=4)
 }
 
+# Block-category styles per references/conventions.md ("Block differentiation").
+# Each entry: (shape, edgecolor, facecolor, linestyle, hatch)
+BLOCK_CATEGORY_STYLES = {
+    "power":      ("round",  "#a00000", "#fbe1e1", "-",  None),
+    "relay":      ("box",    "#1f4e79", "#e6f0fa", "--", None),
+    "interface":  ("round",  "#555555", "#f0f0f0", "-",  None),
+    "custom":     ("box",    "black",   "white",   "-",  None),
+    "connector":  ("box",    "black",   "#f7f7f7", "-",  "///"),
+}
+
 
 class FixtureDiagrammer:
     def __init__(self, title, width=100, height=100):
@@ -62,6 +72,38 @@ class FixtureDiagrammer:
                      fontsize=10, fontweight="bold")
         if sub_label:
             self.ax.text(x + w / 2, y + h / 2 - 2, sub_label, ha="center", va="center", fontsize=8)
+
+    def draw_categorized_block(self, x, y, w, h, tag, category, part="", func="", verify=False):
+        """
+        Category-styled block per references/conventions.md ("Block differentiation").
+        category: one of BLOCK_CATEGORY_STYLES keys ("power", "relay", "interface", "custom",
+        "connector"). Labels the block with tag, part/manufacturer (if given), and a one-line
+        function description; appends [VERIFY] if `verify` is True.
+        """
+        shape, edgecolor, facecolor, ls, hatch = BLOCK_CATEGORY_STYLES.get(
+            category, ("box", "black", "white", "-", None))
+        if shape == "round":
+            patch = patches.FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.1",
+                                            facecolor=facecolor, edgecolor=edgecolor, lw=2, ls=ls)
+        else:
+            patch = patches.Rectangle((x, y), w, h, facecolor=facecolor, edgecolor=edgecolor,
+                                       lw=2, ls=ls, hatch=hatch)
+        self.ax.add_patch(patch)
+        lines = [tag]
+        if part:
+            lines.append(part)
+        if func:
+            lines.append(func)
+        if verify:
+            lines.append("[VERIFY]")
+        n = len(lines)
+        for i, line in enumerate(lines):
+            fw = "bold" if i == 0 else "normal"
+            fs = 10 if i == 0 else 7.5
+            color = "#a00000" if line == "[VERIFY]" else "black"
+            ty = y + h / 2 + (n - 1 - i * 2) * (h / (2.6 * n))
+            self.ax.text(x + w / 2, ty, line, ha="center", va="center",
+                         fontsize=fs, fontweight=fw, color=color, wrap=True)
 
     def draw_terminal_block(self, x, y, w, h, terminals, label):
         self.ax.add_patch(patches.Rectangle((x, y), w, h, facecolor="#eeeeee", edgecolor="black", lw=2))
