@@ -44,6 +44,12 @@ Establish, briefly:
   (ATE) harness map, single-line, interconnect overview.
 - **Audience / use**: quick documentation vs. manufacturing/build-ready vs. review/presentation.
 - **Standard**: IEC 60617, ISO, ANSI/IEEE, or "house style / none". This sets symbol shapes.
+- **Output tier**: ask which visual style — **Tier 1 simple block** (fast, abstract, best for
+  systems with many components), **Tier 2 illustrated/pictorial** (vector icons resembling real
+  components — default recommendation), or **Tier 3 photorealistic** (AI-image-generated —
+  requires an external tool this sandbox doesn't have, and carries real label/pin hallucination
+  risk; Claude can only draft a prompt for the user to run elsewhere). See `references/tools.md`
+  ("Output tiers").
 - **Output**: PDF (default), Word/.docx, and/or editable source for a desktop tool.
 - **Scale**: is true physical scale required (layout/harness) or is a topological schematic fine?
   Be honest about which — see `references/conventions.md` ("Scale").
@@ -123,7 +129,11 @@ This table feeds the blocks list in the final document (`references/assembly.md`
 symbol choice and physical layout in Phase 5.
 
 ### Phase 5 — Draft the diagrams
-Pick the tool per diagram from the routing table below. Then:
+Pick the tool per diagram from the routing table below, matching the **output tier** agreed in
+Phase 1 (`references/tools.md` "Output tiers"): Tier 1 uses `scripts/fixture_diagrammer.py`
+(plain category-styled blocks); Tier 2 uses `scripts/illustrated_diagrammer.py` (component-shaped
+icons — AC outlet, power-module screw terminals, relay/PCB board, DIN-rail terminal strip); Tier 3
+is out of scope for this sandbox (draft a prompt for the user's own external tool instead). Then:
 - Draw with **proper symbols**, not plain boxes: relays as relay blocks (dashed boundary, ganged
   N.O./N.C. contacts, mechanical link to a coil with A1/A2, pole/reference label); terminals as
   filled dots; instruments as labelled circles/blocks (DMM, M, W, V, A); connectors as pin blocks.
@@ -163,7 +173,8 @@ default (best fidelity via Chromium); use `.docx` if the user wants Word. See
 |---|---|---|
 | Electrical schematic with standard component symbols (relays, contacts, sources, meters) | **schemdraw** (`scripts/schemdraw_example.py`) | Real IEC-style symbols incl. a `Relay` element; least drawing effort |
 | Exact-scale or custom wiring schematic, full control, precise relay blocks | **hand-built SVG** (`scripts/schematic_lib.py`) → PDF | Pixel/scale control; matches a house style exactly |
-| System / interconnect block diagram (modules, connectors, looms, harnesses) with zoned, color-coded, orthogonal routing | **matplotlib engine** (`scripts/fixture_diagrammer.py`) | Controlled placement; color-coded harnesses; to-scale via equal aspect |
+| System / interconnect block diagram (modules, connectors, looms, harnesses) with zoned, color-coded, orthogonal routing — Tier 1 (simple block) | **matplotlib engine** (`scripts/fixture_diagrammer.py`) | Controlled placement; color-coded harnesses; to-scale via equal aspect |
+| System / interconnect block diagram, Tier 2 (illustrated/pictorial — component-shaped icons) | **matplotlib illustrated engine** (`scripts/illustrated_diagrammer.py`) | Same accuracy discipline as Tier 1, but icons resemble real component silhouettes (outlet, screw terminals, PCB, DIN rail) |
 | Quick auto-laid-out block/flow diagram | **Graphviz `dot`** or **Mermaid** | Fast; Mermaid also renders live in chat for review |
 | Editable, manufacturing-grade, ISO-symbol native file | Recommend **QElectroTech** (IEC 60617, free), **KiCad** (electronics), or **draw.io** to the user | These can't run headless here; supply them the connection table + a draft to import |
 | Final assembly to PDF | **HTML + SVG → Chromium** (`scripts/render_pdf.js`) | Highest fidelity, honours scale and page layout |
@@ -185,7 +196,12 @@ Read or run these directly; they encode the conventions so you don't re-derive t
   Letter PDF via Chromium (Playwright). Use `printBackground:true` is already set.
 - `scripts/fixture_diagrammer.py` — improved matplotlib `FixtureDiagrammer` (orthogonal routing,
   harness color-coding, zoning, legend) **plus a `draw_relay` method** for proper relay/contactor
-  symbols. A `__main__` demo saves a sample PNG.
+  symbols, `draw_categorized_block` for Tier-1 category-styled blocks, ISO 128 line-style
+  constants, and `draw_offpage_connector`/`draw_mechanical_link` helpers. A `__main__` demo saves
+  a sample PNG.
+- `scripts/illustrated_diagrammer.py` — Tier 2 (illustrated/pictorial) `IllustratedDiagrammer`:
+  `draw_ac_outlet`, `draw_power_module`, `draw_relay_module`, `draw_din_rail_terminal_strip`,
+  `draw_generic_pcb` icons, plus `wire`/`add_legend_item`. A `__main__` demo saves a sample PNG.
 - `scripts/schemdraw_example.py` — minimal working schemdraw example (source → relay-switched
   contact → load, with coil) showing the standard-symbol path.
 

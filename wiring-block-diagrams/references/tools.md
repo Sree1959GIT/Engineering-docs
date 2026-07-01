@@ -4,11 +4,28 @@ Default to tools that run **in this sandbox for free**. Recommend desktop/paid s
 user needs an editable native file in that ecosystem; in that case still produce the connection table
 and a draft they can import.
 
+## Output tiers (visual style)
+
+Ask which tier the user wants in Phase 1 of `SKILL.md` (default: **Tier 2, illustrated/pictorial**,
+unless the user says otherwise):
+
+| Tier | What it is | Produced by | Accuracy risk |
+|---|---|---|---|
+| **1 — Simple block** | Abstract, category-differentiated blocks (see `conventions.md` "Block differentiation") | `scripts/fixture_diagrammer.py` | None — every label is hand-coded from confirmed data. Fastest; best for systems with many components (dozens+) where icon detail would clutter the page. |
+| **2 — Illustrated / pictorial** | Vector icons resembling real component silhouettes (AC outlet, screw-terminal power module, relay/PCB board, DIN-rail terminal strip) | `scripts/illustrated_diagrammer.py` | None — same hand-coded labels, just richer icon shapes. Closer to a "professional CAD" look. Default recommendation: better for smaller component counts / customer-facing documents. |
+| **3 — Photorealistic (external)** | AI-image-generated renders (e.g. Gemini/"Nano Banana") that look like real product photos | **Not available in this sandbox** — no image-generation model/plugin is connected here | **Real risk**: image-gen models can subtly hallucinate a label, pin count, or terminal number that looks plausible but is wrong. Never use for a document someone will wire a board from without a manual label-by-label check against the source. |
+
+For Tier 3, Claude can still help: draft an accurate, ready-to-paste prompt built from the
+confirmed connection table/BOM (component names, exact terminal labels, wire colors) for the user
+to run through their own image-gen tool — but the resulting image must be checked against the
+source data before use, exactly like any other `[VERIFY]` item.
+
 ## In-sandbox (free, verified to run here)
 
 | Tool | Install | Best for | Notes |
 |---|---|---|---|
 | **matplotlib** | preinstalled | Block / interconnect diagrams with controlled placement, color-coded harnesses, zoning, to-scale layout | Use `scripts/fixture_diagrammer.py`. Set `ax.set_aspect('equal')` for true scale. |
+| **matplotlib (illustrated)** | preinstalled | Tier 2 illustrated/pictorial diagrams — component-shaped icons instead of plain blocks | Use `scripts/illustrated_diagrammer.py` (`draw_ac_outlet`, `draw_power_module`, `draw_relay_module`, `draw_din_rail_terminal_strip`, `draw_generic_pcb`). |
 | **schemdraw** | `pip install --break-system-packages schemdraw` | Electrical schematics with standard symbols (sources, resistors, switches, **relays**, meters) | Has `elements.Relay`, `Switch`, `SourceSin`, `MeterV/A`. Least effort for recognisable schematics. |
 | **Graphviz `dot`** | preinstalled (`dot -V`) | Fast auto-laid-out block/flow/topology diagrams | Auto-layout fights orthogonal zoning; use for first-pass topology only. |
 | **Mermaid** | render in an artifact, or `npm i -g @mermaid-js/mermaid-cli` (+ Chromium) | Quick block/flow diagrams that also render live in chat for review | Good for the Phase-5 review loop. |
