@@ -34,6 +34,32 @@ Prefer recognised conventions over plain rectangles:
 - **Connector** — pin block labelled with its designator (e.g. `J4`) and pin names.
 - **Bus / multicore** — multiple parallel lines or one thick line annotated with conductor count.
 
+## Block differentiation (system / interconnect block diagrams)
+
+When a diagram shows whole modules as blocks (not individual schematic symbols), a reader must be
+able to tell block **categories** apart at a glance — before reading any label. Never draw every
+module as the same plain rectangle; vary shape/border/fill by category, consistently across the
+whole document. Applies to the matplotlib block-diagram path (`scripts/fixture_diagrammer.py`) as
+much as to hand-built SVG.
+
+| Category | Shape / border | Fill | Example |
+|---|---|---|---|
+| Power supply / SMPS | Rounded rectangle, thick red border | Light red tint | AC-DC supply module |
+| Relay / switching module | Rectangle, dashed border (echoes the discrete relay symbol above) | Light blue tint | Multi-channel relay board |
+| Interface / adapter module | Rectangle, rounded corners, thin border | Light gray tint | USB-to-I²C/PMBus adapter |
+| Sensor / instrument | Circle or hexagon (mirrors the IEC/ISA instrument-bubble convention) | White | Oscilloscope, DMM, meter |
+| Custom / project-specific board | Rectangle, solid border, no tint | White | Project PCB (mux board, controller card) |
+| Connector / passive interconnect | Small pin-block rectangle, hatched | Light hatch | DB-connector, JST header, terminal block |
+
+Every block, regardless of category, must carry a **label** with:
+- **Tag / reference designator** (e.g. `B3SMPS1`) exactly as it appears in the connection table.
+- **Part number / manufacturer**, if known — omit rather than invent if unconfirmed.
+- A **one-line function description** (what it does, derived from the wiring/BOM research).
+- A `[VERIFY]` marker if any of the above is an unconfirmed hypothesis rather than a sourced fact.
+
+This is a separate concern from the wire/harness **color code** below — that governs the
+*connections*; this governs the *blocks* themselves.
+
 ## Color code (harness / signal class)
 
 Put a **legend on every sheet**.

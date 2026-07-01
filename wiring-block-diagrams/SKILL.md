@@ -124,6 +124,11 @@ Pick the tool per diagram from the routing table below. Then:
 - Draw with **proper symbols**, not plain boxes: relays as relay blocks (dashed boundary, ganged
   N.O./N.C. contacts, mechanical link to a coil with A1/A2, pole/reference label); terminals as
   filled dots; instruments as labelled circles/blocks (DMM, M, W, V, A); connectors as pin blocks.
+- In **block/interconnect diagrams**, make module **categories visually distinguishable** (power
+  supply vs. relay/switching module vs. interface/adapter vs. custom board vs. connector — distinct
+  shape/border/fill per category, not one plain rectangle for everything), and label every block
+  with its tag, part number/manufacturer (if known), and a one-line function. See
+  `references/conventions.md` ("Block differentiation").
 - Apply **conventions** (color coding, orthogonal routing, power-left / switching-centre /
   instruments-right zoning, a legend on every sheet, scale in the title block). See
   `references/conventions.md`.
