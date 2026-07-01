@@ -17,9 +17,10 @@ description: >-
 ## Operating principle
 
 Run the whole job, not just the drawing step: understand the goal → gather any reference docs and
-inputs → **build a connection table that is the single source of truth** → **research/confirm what
-each component actually is** → draft diagrams → review with the user → assemble a final document of
-to-scale diagrams plus a description of each block.
+inputs → **build a connection table that is the single source of truth** → **establish and confirm
+component identity/packaging (two approval gates before and after any research subagents)** → draft
+diagrams → review with the user → assemble a final document of to-scale diagrams plus a description
+of each block.
 
 Default to **open-source, in-sandbox tools** (matplotlib, schemdraw, Graphviz, SVG→Chromium→PDF,
 python-docx). Only suggest paid/desktop software (EPLAN, AutoCAD Electrical, QElectroTech, KiCad,
@@ -68,31 +69,55 @@ Then, before drawing:
 
 ### Phase 4 — Component & module research (BOM)
 Every block in the final diagram and its description must be grounded in a real, identified
-component — not a guess. This phase resolves what each item in the connection table actually *is*
-before any drawing starts.
+component — not a guess. This phase resolves what each item in the connection table actually *is*,
+and its physical packaging/dimensions, before any drawing starts. It has **two hard approval gates**
+— never spawn research subagents, and never move to Phase 5, without the user's sign-off at each one.
 
-**If the user has provided a BOM** (manufacturer part numbers against the connection data):
-1. Extract the list of **unique** components/modules referenced (dedupe by part number, not by
-   reference designator — the same part number can appear at many tags).
-2. Since a real BOM typically has many unique parts, **spawn one research subagent per component
-   (or small batched groups of related parts)** rather than researching serially — use the `Agent`
-   tool in parallel calls. Each subagent's task: given a manufacturer + part number, find its
-   **physical packaging/enclosure type, dimensions, pin/terminal labeling convention, and a short
-   function summary** from public datasheet/product info. Instruct each subagent to mark anything
-   it can't confirm as `[VERIFY]` rather than inferring it.
-3. Consolidate every subagent's findings into one **component table** (Part # → Manufacturer →
-   Package/enclosure → Dimensions → Pin/terminal labels → Function). This table feeds the blocks
-   list in the final document (`references/assembly.md`) and informs symbol choice in Phase 5.
+**Step A — Establish component identities.**
 
-**If the user has not provided a BOM**, do not silently assume component identities:
-1. From the connection table alone, list every distinct component/module type you can identify
-   (by tag, footprint, or description in the source).
-2. Draft your own best-effort understanding of what each one is and its likely function, based on
-   how it's wired — this is a hypothesis, not a confirmed fact.
-3. **Present this consolidated understanding to the user and ask them to confirm or correct it**
-   (batch the questions/table in one pass) before proceeding. Do not move to diagram drafting
-   until the user has reviewed and approved this understanding — everything downstream depends on
-   these identities being right, not assumed.
+- **If the user has provided a BOM** (manufacturer part numbers against the connection data),
+  extract the list of **unique** components/modules referenced (dedupe by part number, not by
+  reference designator — the same part number can appear at many tags). Skip to Step B with this
+  list.
+- **If the user has not provided a BOM**, don't silently assume identities:
+  1. From the connection table, list every distinct component/module type you can identify (by
+     tag, footprint, or description in the source).
+  2. Ask the user, per component, for whatever identifying detail they can give: a manufacturer +
+     part number/model, a URL, an uploaded datasheet/document, or a free-text description. Batch
+     these questions together (don't ask one at a time).
+  3. Where the user gives nothing beyond a functional description, draft your own best-effort
+     hypothesis of what it is, clearly marked as inferred (not confirmed).
+
+**Step B — Preliminary report (Gate 1).**
+Before doing any research, write up a plain summary of exactly what you have for each component:
+what the user told you verbatim (part#/make/model, URL, doc, or description) plus any of your own
+inferred hypotheses, clearly labeled as such. **Present this and get explicit user approval before
+proceeding.** This gate exists so research effort isn't wasted chasing a misread part number or a
+wrong assumption.
+
+**Step C — Spawn research subagents.**
+Once Gate 1 is approved, for every component that has an external reference to chase (a
+manufacturer+part#, a URL, or an uploaded document) spawn a research subagent — **one subagent per
+component** (or small batched groups of closely related parts), run in parallel via the `Agent`
+tool, since a real component set typically has many unique items and serial research doesn't scale.
+Each subagent's brief: given the reference, find its **physical packaging/enclosure type,
+dimensions, pin/terminal labeling convention, and a short function summary**, sourced from the
+datasheet/URL/document/public product info. Instruct every subagent to mark anything it can't
+confirm as `[VERIFY]` rather than inferring it. Components fully specified by the user's own
+free-text description in Step A (no external reference to chase) don't need a subagent — carry
+their description straight through.
+
+**Step D — Packaging report (Gate 2).**
+Consolidate every subagent's findings — plus the directly-specified components — into one
+**component table**: Component/Tag → Part # → Manufacturer → Package/enclosure → Dimensions →
+Pin/terminal labels → Function. Present this as the packaging report: *this is the physical data
+that will be represented in the final block/wiring diagrams*. **Get explicit user approval before
+proceeding to Phase 5.** By this gate you have a confirmed understanding of both connectivity
+(Phase 3) and component identity/packaging (Phase 4), sufficient to draft the functional
+description and diagrams without further guessing.
+
+This table feeds the blocks list in the final document (`references/assembly.md`) and informs
+symbol choice and physical layout in Phase 5.
 
 ### Phase 5 — Draft the diagrams
 Pick the tool per diagram from the routing table below. Then:
