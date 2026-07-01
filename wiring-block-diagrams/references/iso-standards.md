@@ -41,7 +41,7 @@ groupings first, the specific item last.
 | E | Miscellaneous (heating, lighting, non-electrical energy) |
 | F | Protection (fuses, breakers, protective relays) |
 | G | Generation, power supply |
-| K | Relays, contactors |
+| K | Processing (of signals/information) — relays, contactors, **and also PLCs/microcontrollers**, since a PLC is a signal-processing device in 81346-2's broader sense |
 | M | Motors |
 | P | Presentation, indication (meters, displays) |
 | Q | Switching/protection in the power circuit (switchgear) |
@@ -55,6 +55,37 @@ groupings first, the specific item last.
 This is the same letter-code idea behind component prefixes seen on schematics (K1 for a relay,
 M1 for a motor, Q1 for a breaker, X1 for a terminal block) — use it to sanity-check a tag's
 prefix letter against what the symbol actually does.
+
+### Reference matrix — letter code, typical pin orientation, and drawing category
+
+Combines the 81346-2 letter code with the **standard pin-side orientation** convention (see
+`conventions.md` → "Block differentiation" → "Pin-side orientation") and the block-drawing
+category used by `scripts/fixture_diagrammer.py`'s `draw_categorized_block()`. Use this as a
+lookup when placing a new block: it tells you both what letter to expect on the tag and which
+side of the block its inputs/outputs conventionally sit on.
+
+| Component / module | 81346 letter | Typical input side | Typical output side | Block category |
+|---|---|---|---|---|
+| Power supply / SMPS | `G` | Top (mains L1/L2/N/PE) | Right (+V, 0V rails) | `power` |
+| Sensor / transducer | `B` | Left (excitation V+/V−) | Right (signal out) | `interface` or `custom` |
+| PLC / microcontroller / relay | `K` | Left (DI/AI) | Right (DO/AO) | `relay` or `custom` |
+| Circuit breaker / fuse | `F` | Top (line in) | Bottom (load out) | `custom` |
+| Terminal block / plug | `X` | — (internal terminals) | — (external pins) | `connector` |
+| Motor / actuator | `M` | Top (U, V, W, PE) | Right, dashed (mechanical shaft — see `conventions.md` line-type table) | `custom` |
+
+This table is a **layout aid, not a hard rule** — when the source drawing already shows a
+different, consistent orientation, mirror the source rather than force this table onto it.
+
+### Automatic tag placeholders (EPLAN-style `%f%n`)
+
+Some CAD tools (notably EPLAN) auto-generate reference designations at export time using a
+placeholder syntax `%f%n` (`%f` = the 81346-2 function letter, `%n` = a sequential counter,
+assigned in the order the tool encountered the object). If a source drawing/export still shows
+literal, un-substituted `%f%n`-style text instead of a resolved tag (e.g. `%K%3` rather than
+`K3`), the export was taken before the tool's automatic numbering ran — **treat this as
+`[VERIFY]`** and ask the user for the resolved tag rather than guessing the sequence number
+yourself, since our own discipline (see below) is to preserve the source's tag exactly, not
+auto-assign one.
 
 ### How to apply this here
 

@@ -65,6 +65,9 @@ Then, before drawing:
 2. **Adversarial check.** Re-read the source against your table. Watch for misreads (e.g. "loom"
    read as "100m"; "T1/T2" read as "±1/±2"), omitted components, and labels you supplied that the
    source never stated. Anything uncertain in the scan/handwriting gets `[VERIFY]`, not a guess.
+   Also watch for unresolved CAD auto-tag placeholders (e.g. literal `%K%3` instead of `K3` —
+   see `references/iso-standards.md` "Automatic tag placeholders") — flag `[VERIFY]`, don't
+   invent the resolved number yourself.
 3. **Confirm the table with the user** before investing in diagrams, especially the `[VERIFY]` rows.
 
 ### Phase 4 — Component & module research (BOM)
@@ -127,8 +130,18 @@ Pick the tool per diagram from the routing table below. Then:
 - In **block/interconnect diagrams**, make module **categories visually distinguishable** (power
   supply vs. relay/switching module vs. interface/adapter vs. custom board vs. connector — distinct
   shape/border/fill per category, not one plain rectangle for everything), and label every block
-  with its tag, part number/manufacturer (if known), and a one-line function. See
-  `references/conventions.md` ("Block differentiation").
+  with its tag, part number/manufacturer (if known), and a one-line function. Orient pins by
+  function (inputs left, outputs right, power in top, ground/common bottom) unless the source
+  drawing already establishes a different, consistent orientation. See `references/conventions.md`
+  ("Block differentiation" and its "Pin-side orientation" subsection).
+- Use **ISO 128 line-type semantics** so the drawing still reads correctly without color: thick
+  continuous for primary power/bus, thin continuous for control/signal, dashed thin for mechanical
+  linkages/enclosure boundaries, chain-thin for centerlines. See `references/conventions.md`
+  ("Line types & layers").
+- When a signal crosses sheets or leaves/enters a block that isn't directly adjacent on the page,
+  use matching **off-page arrow connectors** (`SIGNAL >>` at the exit, `>> SIGNAL` at the entry)
+  rather than letting a wire dangle. See `references/conventions.md` ("Cross-sheet / off-page
+  signal connectors").
 - Apply **conventions** (color coding, orthogonal routing, power-left / switching-centre /
   instruments-right zoning, a legend on every sheet, scale in the title block). See
   `references/conventions.md`.

@@ -28,6 +28,16 @@ CLASS_COLORS = {
     "harness": ("#003366", "-"),   # physical multicore (use lw>=4)
 }
 
+# ISO 128 line-type semantics (references/conventions.md "Line types & layers") — always black/gray,
+# distinguished by dash pattern (not color) so the drawing still reads correctly in monochrome.
+# Each entry: (linestyle, linewidth)
+ISO128_LINES = {
+    "main":       ("-",           2.5),   # continuous thick: primary power/bus lines
+    "control":    ("-",           1.0),   # continuous thin: control/signal wiring
+    "mechanical": ((0, (4, 3)),   1.2),   # dashed thin: mechanical linkage / enclosure boundary
+    "centerline": ((0, (6, 2, 1, 2)), 1.0),  # chain thin: centerline / symmetry axis
+}
+
 # Block-category styles per references/conventions.md ("Block differentiation").
 # Each entry: (shape, edgecolor, facecolor, linestyle, hatch)
 BLOCK_CATEGORY_STYLES = {
@@ -152,6 +162,31 @@ class FixtureDiagrammer:
                      fontsize=9, fontweight="bold", color="#1f4e79")
         self.ax.text((bx1 + bx2) / 2, by_bot - 1.2, ref, ha="center", va="top", fontsize=7, color="#52627a")
         return in_x, out_x, ys
+
+    def draw_mechanical_link(self, x1, y1, x2, y2, label=""):
+        """Dashed thin ISO 128 'mechanical' line (shaft coupling, enclosure boundary, etc.)."""
+        ls, lw = ISO128_LINES["mechanical"]
+        self.ax.plot([x1, x2], [y1, y2], color="#444444", ls=ls, lw=lw)
+        if label:
+            self.ax.text((x1 + x2) / 2, max(y1, y2) + 1, label, ha="center", va="bottom",
+                         fontsize=8, color="#444444")
+
+    def draw_offpage_connector(self, x, y, signal_name, direction="out", w=10):
+        """
+        Off-page / cross-block arrow connector (conventions.md "Cross-sheet / off-page signal
+        connectors"). direction="out": arrow points away from the block, label reads
+        "SIGNAL >>". direction="in": arrow points into the block, label reads ">> SIGNAL".
+        """
+        if direction == "out":
+            self.ax.annotate("", xy=(x + w, y), xytext=(x, y),
+                             arrowprops=dict(arrowstyle="-|>", color="#26384f", lw=1.5))
+            self.ax.text(x - 1, y, f"{signal_name} >>", ha="right", va="center",
+                         fontsize=8, fontweight="bold", color="#26384f")
+        else:
+            self.ax.annotate("", xy=(x + w, y), xytext=(x, y),
+                             arrowprops=dict(arrowstyle="-|>", color="#26384f", lw=1.5))
+            self.ax.text(x + w + 1, y, f">> {signal_name}", ha="left", va="center",
+                         fontsize=8, fontweight="bold", color="#26384f")
 
     # --- routing & legend ----------------------------------------------
     def route_orthogonal(self, x1, y1, x2, y2, cls="signal", label="", drop_y=None, lw=None):

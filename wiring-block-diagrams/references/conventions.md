@@ -26,13 +26,34 @@ Prefer recognised conventions over plain rectangles:
   giving the **reference and pole count** (e.g. "K1 — 3-pole, N.O."). This is the single most
   important symbol to get right; plain boxes labelled "relay" are not acceptable.
 - **Terminal / junction** — filled dot. A dot means connection; lines crossing **without** a dot are
-  no-connect.
+  no-connect — draw a clean crossing, not the archaic "hump/bridge" jog some older hand-drafted
+  schematics use to show a no-connect crossing. A clean crossing plus the dot-means-connect rule is
+  the unambiguous modern (and CAD-tool-default) convention.
 - **Instrument** — labelled circle: `M` motor, `W` wattmeter, `V` voltmeter, `A` ammeter; or a block
   for multi-function (e.g. `DMM`). Show the terminals it lands on.
 - **Source** — `AC Source` / `DC Source` block, or an IEC source symbol (sine for AC, `=`/`~` for an
   SMPS). The bundled matplotlib `draw_smps` draws the `~` over `=` convention.
 - **Connector** — pin block labelled with its designator (e.g. `J4`) and pin names.
 - **Bus / multicore** — multiple parallel lines or one thick line annotated with conductor count.
+
+## Line types & layers (ISO 128)
+
+Color-coding (below) is a helpful reading aid, but it fails in black-and-white print/scan and for
+colorblind readers. ISO 128 defines line-*type* semantics that carry meaning independent of color —
+apply these alongside the color code, not instead of it, so the drawing degrades gracefully to
+monochrome:
+
+| Line type | Appearance | Usage |
+|---|---|---|
+| Continuous thick | `────────` (heavy weight) | Primary electrical/power paths, bus lines, main fluid-power lines |
+| Continuous thin | `────────` (light weight) | Control/signal wiring, sensor feedback, internal block routing |
+| Dashed thin | `- - - -` | Mechanical linkages, enclosure/module boundary shields, sub-assembly housings (e.g. a motor-to-pump shaft link, or a dashed box showing "these parts live inside one enclosure") |
+| Chain thin (long-dash-dot) | `── · ── ·` | Centerlines / symmetry axes on a physical-layout drawing |
+
+The bundled `draw_relay()` already uses a dashed line for the mechanical coil-to-contact link —
+that's this same "dashed = mechanical linkage" semantic, not a stylistic choice. When adding a new
+line type to `fixture_diagrammer.py` or `schematic_lib.py`, keep it black/gray and vary the *dash
+pattern*, not the color, so it reads correctly without color.
 
 ## Block differentiation (system / interconnect block diagrams)
 
@@ -60,6 +81,22 @@ Every block, regardless of category, must carry a **label** with:
 This is a separate concern from the wire/harness **color code** below — that governs the
 *connections*; this governs the *blocks* themselves.
 
+### Pin-side orientation
+
+Within a block, place pins by function so a reader can predict where to look without hunting:
+
+| Side | Convention |
+|---|---|
+| Left | Control/data inputs — digital in (DI), analog in (AI) |
+| Right | Outputs — signal/actuator feeds, digital out (DO), analog out (AO) |
+| Top | Incoming power — mains lines, rails, VCC |
+| Bottom | Ground / common / protective earth (GND, COM, PE) |
+
+See `references/iso-standards.md` → "Reference matrix" for the per-category expected pin sides
+(power supply, sensor, PLC/relay, breaker, terminal block, motor). Treat this as a **layout aid**:
+when the source drawing already uses a different, consistent orientation, mirror the source
+instead of forcing this convention onto it.
+
 ## Color code (harness / signal class)
 
 Put a **legend on every sheet**.
@@ -80,6 +117,23 @@ Put a **legend on every sheet**.
 - Keep relay groups vertically separated so contact stacks and coils don't collide (give each relay
   block clear space below its lowest pole for the coil + reference label).
 - Label every conductor at least once; label terminals at both ends where space allows.
+
+## Cross-sheet / off-page signal connectors
+
+A wire must never simply stop at a sheet edge or a block boundary with no indication of where it
+goes. When a signal leaves one sheet/block and continues on another (a document with multiple
+sheets per `assembly.md`, or a signal crossing between drawn blocks that aren't directly adjacent):
+
+- **At the exit point**, draw an arrow pointing outward labeled with the signal name:
+  `SIGNAL_NAME >>`.
+- **At the matching entry point** (same sheet elsewhere, or the destination sheet), draw an arrow
+  pointing inward labeled the same way: `>> SIGNAL_NAME`. The exit and entry labels must match
+  exactly — that's what lets a reader trace the net across pages without a physical line to follow.
+- For a fully unambiguous cross-reference (useful on dense multi-sheet documents), extend the
+  label to a full `Tag:Pin` address using the 81346 aspect syntax from `iso-standards.md`, e.g.
+  `=SYS1+MOD2−Q1:4 >>` (system 1, module 2, component Q1, pin 4) — only do this when the source
+  data actually supports building that full address; don't fabricate aspect segments the source
+  doesn't give you.
 
 ## Scale
 
