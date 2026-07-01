@@ -17,8 +17,9 @@ description: >-
 ## Operating principle
 
 Run the whole job, not just the drawing step: understand the goal → gather any reference docs and
-inputs → **build a connection table that is the single source of truth** → draft diagrams → review
-with the user → assemble a final document of to-scale diagrams plus a description of each block.
+inputs → **build a connection table that is the single source of truth** → **research/confirm what
+each component actually is** → draft diagrams → review with the user → assemble a final document of
+to-scale diagrams plus a description of each block.
 
 Default to **open-source, in-sandbox tools** (matplotlib, schemdraw, Graphviz, SVG→Chromium→PDF,
 python-docx). Only suggest paid/desktop software (EPLAN, AutoCAD Electrical, QElectroTech, KiCad,
@@ -65,7 +66,35 @@ Then, before drawing:
    source never stated. Anything uncertain in the scan/handwriting gets `[VERIFY]`, not a guess.
 3. **Confirm the table with the user** before investing in diagrams, especially the `[VERIFY]` rows.
 
-### Phase 4 — Draft the diagrams
+### Phase 4 — Component & module research (BOM)
+Every block in the final diagram and its description must be grounded in a real, identified
+component — not a guess. This phase resolves what each item in the connection table actually *is*
+before any drawing starts.
+
+**If the user has provided a BOM** (manufacturer part numbers against the connection data):
+1. Extract the list of **unique** components/modules referenced (dedupe by part number, not by
+   reference designator — the same part number can appear at many tags).
+2. Since a real BOM typically has many unique parts, **spawn one research subagent per component
+   (or small batched groups of related parts)** rather than researching serially — use the `Agent`
+   tool in parallel calls. Each subagent's task: given a manufacturer + part number, find its
+   **physical packaging/enclosure type, dimensions, pin/terminal labeling convention, and a short
+   function summary** from public datasheet/product info. Instruct each subagent to mark anything
+   it can't confirm as `[VERIFY]` rather than inferring it.
+3. Consolidate every subagent's findings into one **component table** (Part # → Manufacturer →
+   Package/enclosure → Dimensions → Pin/terminal labels → Function). This table feeds the blocks
+   list in the final document (`references/assembly.md`) and informs symbol choice in Phase 5.
+
+**If the user has not provided a BOM**, do not silently assume component identities:
+1. From the connection table alone, list every distinct component/module type you can identify
+   (by tag, footprint, or description in the source).
+2. Draft your own best-effort understanding of what each one is and its likely function, based on
+   how it's wired — this is a hypothesis, not a confirmed fact.
+3. **Present this consolidated understanding to the user and ask them to confirm or correct it**
+   (batch the questions/table in one pass) before proceeding. Do not move to diagram drafting
+   until the user has reviewed and approved this understanding — everything downstream depends on
+   these identities being right, not assumed.
+
+### Phase 5 — Draft the diagrams
 Pick the tool per diagram from the routing table below. Then:
 - Draw with **proper symbols**, not plain boxes: relays as relay blocks (dashed boundary, ganged
   N.O./N.C. contacts, mechanical link to a coil with A1/A2, pole/reference label); terminals as
@@ -75,11 +104,11 @@ Pick the tool per diagram from the routing table below. Then:
   `references/conventions.md`.
 - Render drafts to PNG/SVG so they can be shown in chat.
 
-### Phase 5 — Review with the user
+### Phase 6 — Review with the user
 Show the draft(s) inline and ask focused questions, leading with the `[VERIFY]` items. Iterate on
 layout/labels. Don't proceed to the polished document until the content is confirmed.
 
-### Phase 6 — Assemble the final document
+### Phase 7 — Assemble the final document
 Produce the deliverable: each diagram (to scale where applicable) followed by a **short description
 of each block**, the connection table, and a consolidated **"Items to verify"** list. PDF is the
 default (best fidelity via Chromium); use `.docx` if the user wants Word. See
@@ -126,3 +155,5 @@ Install note: `pip install --break-system-packages schemdraw` (matplotlib, pytho
   source-review discipline.
 - `references/assembly.md` — building the final PDF (HTML structure, keep-together rules,
   per-block descriptions, verify list) and the python-docx alternative.
+- `references/iso-standards.md` — ISO/IEC 81346 reference designations, ANSI/ISA 5.1 instrument
+  tagging, IEC 60617 electrical symbols, and ISO 14617/10628/15519 process symbols.
