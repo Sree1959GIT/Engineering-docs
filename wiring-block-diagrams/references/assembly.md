@@ -46,6 +46,23 @@ heading per section, the embedded image, the block-description list, and a table
 structure as the PDF. (If you instead need rich Word features like styled tables/TOC, the separate
 `docx` skill and its docx-js path is also available.)
 
+## Optional: presentation polish with nano-banana-2 (MCP)
+
+The `nano-banana-2` MCP server (Gemini image generation) is available for **decorative, non-technical**
+polish only — a cover page background, a title-block texture, or a stylized rendering of the document
+shell for a presentation deck. Rules:
+
+- **Never** generate the wiring/block diagram content itself with `generate_image`/`edit_image`. AI
+  image generation can hallucinate labels, miscount pins/contacts, or garble text — unacceptable for
+  connection-critical content that must match the verified connection table exactly.
+- The precise diagram (schemdraw/matplotlib/SVG output) is always the technical source of truth and is
+  embedded unmodified; nano-banana only touches surrounding decorative elements (cover art, background
+  imagery, section-divider graphics).
+- Call `get_configuration_status` first to confirm the server has a working `GEMINI_API_KEY` before
+  offering this option — treat it as unavailable and fall back to a plain title page if not configured.
+- Always show the generated art to the user for approval before including it in the final PDF/docx —
+  treat it like any other draft, not a guaranteed-correct output.
+
 ## Quality gate before presenting
 
 - Every connection in the diagram appears in the table and vice-versa.

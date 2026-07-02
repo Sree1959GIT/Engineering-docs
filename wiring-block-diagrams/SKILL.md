@@ -96,6 +96,7 @@ default (best fidelity via Chromium); use `.docx` if the user wants Word. See
 | Editable, manufacturing-grade, ISO-symbol native file | Recommend **QElectroTech** (IEC 60617, free), **KiCad** (electronics), or **draw.io** to the user | These can't run headless here; supply them the connection table + a draft to import |
 | Final assembly to PDF | **HTML + SVG → Chromium** (`scripts/render_pdf.js`) | Highest fidelity, honours scale and page layout |
 | Final assembly to Word | **python-docx** (embed the rendered PNGs) | When the user specifically wants `.docx` |
+| Cover page / title-block background / presentation polish (optional, non-technical only) | **nano-banana-2 MCP** (`generate_image`) | AI image generation for visual polish; **never** for the wiring/block content itself — see `references/assembly.md` |
 
 Note on Graphviz: the bundled matplotlib engine is preferred for *controlled* engineering layouts
 (auto-layout tends to fight zoning and orthogonal routing). Graphviz/Mermaid are fine for fast
